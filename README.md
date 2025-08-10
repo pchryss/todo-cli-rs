@@ -21,5 +21,5 @@ cargo install pchryss-todo-cli
 
 ## Usage
 ```bash
-pchryss-todo-cli help
+pchryss-todo help
 ```
