@@ -1,7 +1,4 @@
-use std::io::{self, Write};
-use pchryss_todo_cli::{Todo, Priority};
-use std::{collections::HashMap, fs, path::PathBuf};
-use serde::{Serialize, Deserialize};
+use pchryss_todo_cli::{Todo, Priority, load_todos, save_todos};
 
 fn main() {
 
@@ -34,7 +31,7 @@ fn main() {
                     return;
                 }
             };
-            let id = if todos_is_empty() {
+            let id = if todos.is_empty() {
                 1
             } else {
                 todos.keys().max().unwrap() + 1

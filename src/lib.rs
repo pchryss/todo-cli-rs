@@ -39,7 +39,7 @@ fn storage_path() -> PathBuf {
     path
 }
 
-fn load_todos() -> HashMap<u32, Todo> {
+pub fn load_todos() -> HashMap<u32, Todo> {
     let path = storage_path();
     if let Ok(data) = fs::read_to_string(&path) {
         serde_json::from_str(&data).unwrap_or_default()
@@ -48,7 +48,7 @@ fn load_todos() -> HashMap<u32, Todo> {
     }
 }
 
-fn save_todos(todos: &HashMap<u32, Todo>) {
+pub fn save_todos(todos: &HashMap<u32, Todo>) {
     let path = storage_path();
     let data = serde_json::to_string_pretty(todos).unwrap();
     fs::write(path, data).unwrap();
