@@ -18,7 +18,7 @@ fn main() {
             }
         },
         "add" => {
-            if command.len() < 4 {
+            if args.len() < 4 {
                 eprintln!("Usage: pchryss-todo add <priority> <task>");
                 return;
             }
