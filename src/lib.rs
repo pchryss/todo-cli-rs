@@ -35,7 +35,7 @@ impl fmt::Display for Todo {
 
 fn storage_path() -> PathBuf {
     let mut path = dirs::home_dir().expect("Cannt find home directory");
-    path.push(".todo_list.json");
+    path.push(".pchryss_todo_list.json");
     path
 }
 

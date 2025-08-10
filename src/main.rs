@@ -64,6 +64,26 @@ fn main() {
             }
 
         },
+        "help" => {
+            println!("
+            pchryss-todo-cli - A simple persistent todo CLI tool
+
+            Usage:
+            todo list
+                Lists all todos.
+
+            todo add <priority> <task>
+                Adds a new todo with priority (1=High, 2=Medium, 3=Low).
+                Example: todo add 1 \"Buy groceries\"
+
+            todo complete <id>
+                Completes and removes the todo with the given id.
+                Example: todo complete 3
+
+            todo help
+                Displays this help message.
+            ");
+        },
         _ => eprintln!("Invalid command.")
     }
 }
