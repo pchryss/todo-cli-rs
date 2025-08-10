@@ -1,7 +1,16 @@
 [package]
-name = "todo"
+name = "pchryss-todo-cli"
 version = "0.1.0"
 edition = "2024"
+author = "Philip Chryssochoos"
+description = "Simple CLI todo app"
+license = "MIT"
+repository = "https://github.com/pchryss/todo-cli-rs"
+readme = "README.md"
+
+[[bin]]
+name = "pchryss-todo"
+path = "src/main.rs"
 
 [dependencies]
 colored = "2.0"

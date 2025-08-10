@@ -1,5 +1,5 @@
 use std::io::{self, Write};
-use todo::{Todo, Priority};
+use pchryss_todo_cli::{Todo, Priority};
 use std::collections::HashMap;
 
 fn main() {
