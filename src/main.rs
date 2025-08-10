@@ -1,73 +1,69 @@
 use std::io::{self, Write};
 use pchryss_todo_cli::{Todo, Priority};
-use std::collections::HashMap;
+use std::{collections::HashMap, fs, path::PathBuf};
+use serde::{Serialize, Deserialize};
 
 fn main() {
-    println!("Welcome to your todo list!");
-    println!("Use command 'help' for useful tips!");
-    let mut todos: HashMap<u32, Todo> = HashMap::new();
-    let mut id: u32 = 1;
-    loop {
-        print!("Enter command: ");
-        io::stdout().flush().unwrap();
-        let mut input = String::new();
-        io::stdin().read_line(&mut input).unwrap();
-        let command: Vec<&str> = input.trim().split_whitespace().collect();
-        if command.is_empty() {
-            println!("");
-            continue;
-        }
-        match command[0] {
-            "quit" => break,
-            "list" => {
-                for (id, todo) in &todos {
-                    println!("{}. {}", id, todo);
-                }
-            },
-            "add" => {
-                if command.len() != 3 {
-                    eprintln!("Error: Must pass in a priority and task");
-                    eprintln!("");
-                    continue;
-                }
-                let priority = match command[1] {
-                    "1" => Priority::High,
-                    "2" => Priority::Medium,
-                    "3" => Priority::Low,
-                    _ => {
-                        eprintln!("Error: Priority must be 1-3");
-                        eprintln!("");
-                        continue;
-                    }
-                };
-                todos.insert(id, Todo::new(command[2..].join(" "), priority));
-                id += 1;
-            },
-            "complete" => {
-                if command.len() != 2 {
-                    eprintln!("Error: Provide a todo id to complete");
-                    eprintln!("");
-                    continue;
-                }
-                let task_id = command[1];
-                let task_id: u32 = match task_id.parse() {
-                    Ok(id) => id,
-                    Err(_) => {
-                        eprintln!("Error: todo id must be a number");
-                        eprintln!("");
-                        continue;
-                    }
-                };
-                if !todos.contains_key(&task_id) {
-                    eprintln!("Error: Please provide a valid todo id");
-                    eprintln!("");
-                    continue;
-                }
-                todos.remove(&task_id);
 
-            },
-            _ => println!("Invalid command.")
-        }
-        println!("");
+    let args: Vec<String> = env::args().collect();
+    if args.len() < 2 {
+        eprintln!("Usage: todo <command> [args]");
+        return;
+    }
+
+    let command = &args[1];
+    let mut todos = load_todos();
+
+    match command.as_str() {
+        "list" => {
+            for (id, todo) in &todos {
+                println!("{}. {}", id, todo);
+            }
+        },
+        "add" => {
+            if command.len() < 4 {
+                eprintln!("Usage: todo add <priority> <task>");
+                return;
+            }
+            let priority = match args[2].as_str() {
+                "1" => Priority::High,
+                "2" => Priority::Medium,
+                "3" => Priority::Low,
+                _ => {
+                    eprintln!("Error: Priority must be 1-3");
+                    return;
+                }
+            };
+            let id = if todos_is_empty() {
+                1
+            } else {
+                todos.keys().max().unwrap() + 1
+            };
+            let task = args[3..].join(" ");
+            todos.insert(id, Todo { task, priority });
+            save_todos(&todos);
+            println!("Added todo #{}", id);
+        },
+        "complete" => {
+            if args.len() != 3 {
+                eprintln!("Usage: todo complete <id>");
+                return;
+            }
+            let id: u32 = match args[2].parse() {
+                Ok(id) => id,
+                Err(_) => {
+                    eprintln!("ID must be a number");
+                    return;
+                }
+            };
+            if todos.remove(&id).is_some() {
+                save_todos(&todos);
+                println!("Completed todo #{}", id);
+            } else {
+                eprintln!("No todo with id {}", id);
+            }
+
+        },
+        _ => eprintln!("Invalid command.")
     }
 }
