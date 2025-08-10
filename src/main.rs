@@ -4,7 +4,7 @@ fn main() {
 
     let args: Vec<String> = env::args().collect();
     if args.len() < 2 {
-        eprintln!("Usage: todo <command> [args]");
+        eprintln!("Usage: pchryss-todo <command> [args]");
         return;
     }
 
@@ -19,7 +19,7 @@ fn main() {
         },
         "add" => {
             if command.len() < 4 {
-                eprintln!("Usage: todo add <priority> <task>");
+                eprintln!("Usage: pchryss-todo add <priority> <task>");
                 return;
             }
             let priority = match args[2].as_str() {
@@ -43,7 +43,7 @@ fn main() {
         },
         "complete" => {
             if args.len() != 3 {
-                eprintln!("Usage: todo complete <id>");
+                eprintln!("Usage: pchryss-todo complete <id>");
                 return;
             }
             let id: u32 = match args[2].parse() {
